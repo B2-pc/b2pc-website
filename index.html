@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="referrer" content="strict-origin"/>
+  <meta name="robots" content="index,follow"/>
+  <meta http-equiv="X-Content-Type-Options" content="nosniff"/>
+  <meta http-equiv="X-Frame-Options" content="DENY"/>
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.jsdelivr.net https://api.emailjs.com;
+             script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+             style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+             img-src 'self' data:;
+             connect-src https://api.emailjs.com;"/>
+  <title>B2-PC | بناء · تطوير · صيانة</title>
+  <meta name="description" content="B2-PC — متخصصون في بناء وتطوير وصيانة أجهزة PC Gaming بمسقط، عُمان. ضمان سنة كاملة وتركيب مجاني."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Bebas+Neue&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
+
+  <style>
+  /* ═══════════════════════════════════════════
+     DESIGN TOKENS
+  ═══════════════════════════════════════════ */
+  :root{
+    --bg:#050505; --s1:#0d0d0d; --s2:#131313; --s3:#191919;
+    --border:#1e1e1e; --border2:#2a2a2a;
+    --red:#7B1111; --red-m:#A81919; --red-l:#C0392B; --red-v:#E74C3C;
+    --glow-sm:rgba(160,25,25,.12); --glow-md:rgba(160,25,25,.22);
+    --text:#EDEAE3; --text2:#B0ABA2; --dim:#555; --dimmer:#2e2e2e;
+    --green:#27AE60; --wa:#25D366;
+    --r:12px; --r2:18px; --r3:28px;
+    --ease:cubic-bezier(.4,0,.2,1);
+    --shadow-card:0 2px 12px rgba(0,0,0,.5), 0 0 0 1px var(--border);
+    --shadow-hover:0 20px 50px rgba(0,0,0,.7), 0 0 0 1px var(--red-m);
+  }
+
+  /* ═══════════════════════════════════════════
+     RESET & BASE
+  ═══════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0 }
+  html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased }
+  body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--text);
+         min-height:100vh; overflow-x:hidden; line-height:1.6 }
+  button { font-family:'Cairo',sans-serif }
+  a { text-decoration:none; color:inherit }
+
+  /* ═══════════════════════════════════════════
+     BACKGROUND LAYERS
+  ═══════════════════════════════════════════ */
+  .bg-layer {
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(139,17,17,.14) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 43px, rgba(139,17,17,.025) 43px, rgba(139,17,17,.025) 44px),
+      repeating-linear-gradient(90deg, transparent, transparent 43px, rgba(139,17,17,.025) 43px, rgba(139,17,17,.025) 44px);
+  }
+  .bg-orb {
+    position:fixed; z-index:0; pointer-events:none; border-radius:50%;
+    filter:blur(120px); opacity:.5;
+    width:500px; height:500px;
+    top:-200px; left:50%; transform:translateX(-50%);
+    background:radial-gradient(circle, rgba(120,15,15,.3) 0%, transparent 70%);
+    animation:orbFloat 12s ease-in-out infinite;
+  }
+  @keyframes orbFloat {
+    0%,100%{ transform:translateX(-50%) translateY(0) }
+    50%    { transform:translateX(-50%) translateY(30px) }
+  }
+
+  /* ═══════════════════════════════════════════
+     STICKY NAV
+  ═══════════════════════════════════════════ */
+  .navbar {
+    position:sticky; top:0; z-index:200;
+    height:68px; padding:0 28px;
+    display:flex; align-items:center; justify-content:space-between;
+    background:rgba(5,5,5,.92); backdrop-filter:blur(24px) saturate(180%);
+    border-bottom:1px solid var(--border);
+    transition:border-color .4s, box-shadow .4s;
+  }
+  .navbar.elevated { border-color:var(--border2); box-shadow:0 8px 40px rgba(0,0,0,.8) }
+  .nav-logo { display:flex; align-items:center; cursor:pointer; gap:10px }
+  .nav-logo img { height:44px; width:auto; object-fit:contain }
+  .nav-right { display:flex; align-items:center; gap:10px }
+  .btn-back {
+    display:none; align-items:center; gap:6px;
+    font-size:13px; color:var(--text2); cursor:pointer;
+    border:1px solid var(--border2); padding:7px 16px; border-radius:50px;
+    background:transparent; transition:.3s var(--ease); font-weight:700;
+  }
+  .btn-back:hover { color:var(--text); border-color:var(--red-m) }
+  .btn-back.visible { display:flex }
+  .btn-wa-nav {
+    display:flex; align-items:center; gap:7px;
+    background:var(--wa); color:#fff; border:none;
+    padding:9px 18px; border-radius:50px;
+    font-size:13px; font-weight:800; cursor:pointer;
+    transition:.3s var(--ease); white-space:nowrap;
+  }
+  .btn-wa-nav:hover { filter:brightness(1.1); transform:translateY(-1px) }
+
+  /* ═══════════════════════════════════════════
+     PAGE SYSTEM
+  ═══════════════════════════════════════════ */
+  .page {
+    position:relative; z-index:1;
+    display:none; flex-direction:column; align-items:center;
+    min-height:calc(100vh - 68px); padding:0 20px 100px;
+  }
+  .page.active { display:flex; animation:pageIn .5s var(--ease) both }
+  @keyframes pageIn { from{ opacity:0; transform:translateY(18px) } to{ opacity:1; transform:translateY(0) } }
+
+  /* ═══════════════════════════════════════════
+     TYPOGRAPHY UTILS
+  ═══════════════════════════════════════════ */
+  .mono { font-family:'JetBrains Mono',monospace }
+  .tag-pill {
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    letter-spacing:3px; text-transform:uppercase;
+    color:var(--red-l); border:1px solid rgba(160,25,25,.35);
+    background:rgba(120,15,15,.12); padding:7px 20px; border-radius:50px;
+  }
+  .tag-pill .dot {
+    width:6px; height:6px; border-radius:50%; background:var(--green);
+    box-shadow:0 0 6px var(--green); animation:pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .section-head {
+    text-align:center; margin-bottom:52px;
+  }
+  .section-head h2 {
+    font-size:clamp(22px,3vw,30px); font-weight:900; margin-bottom:10px;
+  }
+  .section-head p { font-size:14px; color:var(--text2); max-width:480px; margin:0 auto }
+  .divider {
+    width:50px; height:3px; margin:14px auto 0; border-radius:2px;
+    background:linear-gradient(90deg, var(--red-m), transparent);
+  }
+
+  /* ═══════════════════════════════════════════
+     HOME — HERO
+  ═══════════════════════════════════════════ */
+  .hero {
+    width:100%; max-width:960px;
+    display:flex; flex-direction:column; align-items:center;
+    text-align:center; padding:90px 20px 70px;
+    gap:0;
+  }
+  .hero-title {
+    font-size:clamp(44px,8vw,80px); font-weight:900;
+    line-height:1.0; letter-spacing:-2px; margin:20px 0 24px;
+  }
+  .hero-title .grad {
+    background:linear-gradient(135deg, #C0392B 0%, #E74C3C 40%, #FF7675 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    display:block;
+  }
+  .hero-sub {
+    font-size:clamp(15px,2vw,18px); color:var(--text2);
+    line-height:1.85; max-width:560px; margin-bottom:52px;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display:flex; justify-content:center; flex-wrap:wrap;
+    width:100%; max-width:620px;
+    border:1px solid var(--border2); border-radius:var(--r2);
+    background:var(--s2); overflow:hidden; margin-bottom:80px;
+  }
+  .stat {
+    flex:1; min-width:120px; padding:22px 16px; text-align:center;
+    border-left:1px solid var(--border2);
+    position:relative;
+  }
+  .stat:last-child { border-left:none }
+  .stat-n {
+    font-family:'Bebas Neue',sans-serif; font-size:34px;
+    color:var(--red-l); letter-spacing:2px; display:block; line-height:1;
+  }
+  .stat-l { font-size:11px; color:var(--dim); font-weight:700;
+    letter-spacing:1px; text-transform:uppercase; margin-top:4px }
+
+  /* ═══════════════════════════════════════════
+     HOME — SERVICE CARDS
+  ═══════════════════════════════════════════ */
+  .services-grid {
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+    gap:18px; width:100%; max-width:1000px; margin-bottom:90px;
+  }
+  .svc-card {
+    background:var(--s2); border:1px solid var(--border);
+    border-radius:var(--r2); padding:40px 30px;
+    cursor:pointer; position:relative; overflow:hidden;
+    transition:.4s var(--ease); text-align:center;
+    display:block; color:inherit;
+  }
+  .svc-card::before {
+    content:''; position:absolute; inset:0; opacity:0;
+    background:radial-gradient(ellipse at 50% 0%, var(--glow-md), transparent 65%);
+    transition:.4s;
+  }
+  .svc-card::after {
+    content:''; position:absolute; bottom:0; left:0; right:0;
+    height:2px; opacity:0;
+    background:linear-gradient(90deg, transparent, var(--red-m), transparent);
+    transition:.4s;
+  }
+  .svc-card:hover { border-color:var(--red-m); transform:translateY(-7px); box-shadow:var(--shadow-hover) }
+  .svc-card:hover::before, .svc-card:hover::after { opacity:1 }
+  .svc-card:hover .svc-icon { transform:scale(1.18) rotate(-6deg) }
+  .svc-icon { font-size:52px; display:block; margin-bottom:20px; transition:transform .3s }
+  .svc-title { font-size:21px; font-weight:900; margin-bottom:10px }
+  .svc-desc { font-size:13px; color:var(--text2); line-height:1.75; margin-bottom:24px }
+  .svc-link {
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12px; font-weight:800; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--red-l);
+    transition:gap .3s;
+  }
+  .svc-card:hover .svc-link { gap:10px }
+  .svc-wa { border-color:#122a1a; background:linear-gradient(180deg,var(--s2) 0%,#09160e 100%) }
+  .svc-wa:hover { border-color:var(--wa); box-shadow:0 20px 50px rgba(37,211,102,.14), 0 0 0 1px var(--wa) }
+  .svc-wa .svc-link { color:var(--wa) }
+
+  /* ═══════════════════════════════════════════
+     HOME — WHY US (FEATURES)
+  ═══════════════════════════════════════════ */
+  .why-section { width:100%; max-width:1000px; margin-bottom:80px }
+  .feats-grid {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px;
+  }
+  .feat {
+    background:var(--s1); border:1px solid var(--border);
+    border-radius:var(--r); padding:28px 22px; text-align:center;
+    transition:.3s var(--ease);
+  }
+  .feat:hover { border-color:var(--red); transform:translateY(-3px) }
+  .feat-ico { font-size:34px; margin-bottom:14px; display:block }
+  .feat h4 { font-size:15px; font-weight:800; margin-bottom:8px }
+  .feat p { font-size:12px; color:var(--text2); line-height:1.65 }
+
+  /* ═══════════════════════════════════════════
+     HOME — PROCESS STEPS
+  ═══════════════════════════════════════════ */
+  .process-section { width:100%; max-width:860px; margin-bottom:80px }
+  .process-steps {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:0; position:relative;
+  }
+  .proc-step {
+    display:flex; flex-direction:column; align-items:center;
+    text-align:center; padding:30px 20px; position:relative;
+  }
+  .proc-step:not(:last-child)::after {
+    content:'←'; position:absolute; top:38px; left:-10px;
+    color:var(--border2); font-size:18px;
+  }
+  .proc-num {
+    width:52px; height:52px; border-radius:50%;
+    background:var(--s2); border:2px solid var(--border2);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--red-l);
+    margin-bottom:14px; transition:.3s;
+  }
+  .proc-step:hover .proc-num { border-color:var(--red-m); background:var(--glow-sm) }
+  .proc-step h4 { font-size:14px; font-weight:800; margin-bottom:6px }
+  .proc-step p { font-size:12px; color:var(--text2); line-height:1.6 }
+
+  /* ═══════════════════════════════════════════
+     FORM PAGES
+  ═══════════════════════════════════════════ */
+  .form-page-wrap {
+    width:100%; max-width:640px; padding-top:50px;
+  }
+  .form-shell {
+    background:var(--s1); border:1px solid var(--border);
+    border-radius:var(--r3); overflow:hidden;
+    box-shadow:0 40px 80px rgba(0,0,0,.7);
+  }
+  .form-shell-head {
+    padding:34px 36px 26px;
+    background:linear-gradient(160deg,rgba(120,15,15,.1) 0%,transparent 100%);
+    border-bottom:1px solid var(--border);
+  }
+  .form-shell-head h2 { font-size:24px; font-weight:900; margin-bottom:6px }
+  .form-shell-head p { font-size:14px; color:var(--text2) }
+  .form-body { padding:32px 36px }
+
+  /* PROGRESS */
+  .prog-track { display:flex; align-items:center; gap:14px; margin-bottom:30px }
+  .prog-rail { flex:1; height:3px; background:var(--border); border-radius:3px; overflow:hidden }
+  .prog-fill {
+    height:100%; border-radius:3px;
+    background:linear-gradient(90deg, var(--red), var(--red-l));
+    transition:width .6s var(--ease);
+  }
+  .prog-txt { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--dim); white-space:nowrap }
+
+  /* STEPS */
+  .step { display:none; animation:pageIn .38s var(--ease) both }
+  .step.active { display:block }
+  .step-title { font-size:17px; font-weight:800; margin-bottom:22px; color:var(--text) }
+
+  /* OPT CHIPS */
+  .chips { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; margin-bottom:24px }
+  .chip {
+    background:var(--s2); border:1px solid var(--border);
+    padding:14px 10px; border-radius:var(--r);
+    text-align:center; cursor:pointer;
+    font-size:13px; font-weight:700; transition:.25s;
+  }
+  .chip:hover { border-color:var(--red-m) }
+  .chip.on { border-color:var(--red-l); background:rgba(160,25,25,.15); color:#fff }
+  .chip-ico { font-size:22px; display:block; margin-bottom:6px }
+
+  /* FIELDS */
+  .field { margin-bottom:18px }
+  .field label {
+    display:block; font-size:11px; font-weight:700; color:var(--dim);
+    margin-bottom:8px; letter-spacing:1.2px; text-transform:uppercase;
+  }
+  .field input, .field textarea, .field select {
+    width:100%; background:var(--s2);
+    border:1px solid var(--border); border-radius:var(--r);
+    color:var(--text); font-family:'Cairo',sans-serif;
+    font-size:15px; padding:14px 16px;
+    outline:none; transition:.3s; resize:vertical;
+    appearance:none;
+  }
+  .field input::placeholder, .field textarea::placeholder { color:var(--dimmer) }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color:var(--red-m);
+    box-shadow:0 0 0 3px rgba(120,15,15,.18);
+  }
+  .field textarea { min-height:100px }
+  .field-hint { font-size:11px; color:var(--dim); margin-top:5px }
+
+  /* CHAR COUNTER */
+  .char-count { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--dim); text-align:left; margin-top:4px }
+  .char-count.warn { color:var(--red-l) }
+
+  /* INLINE VALIDATION */
+  .field-err { font-size:11px; color:var(--red-v); margin-top:5px; display:none }
+  .field.invalid .field-err { display:block }
+  .field.invalid input, .field.invalid textarea, .field.invalid select {
+    border-color:var(--red-v); box-shadow:0 0 0 3px rgba(231,76,60,.12);
+  }
+  .field.valid input, .field.valid textarea { border-color:#27AE60 }
+
+  /* BUTTONS */
+  .btn-primary {
+    width:100%; padding:17px;
+    background:linear-gradient(135deg, var(--red) 0%, var(--red-l) 100%);
+    color:#fff; border:none; border-radius:var(--r);
+    font-size:16px; font-weight:800; cursor:pointer;
+    transition:.3s var(--ease); position:relative; overflow:hidden;
+  }
+  .btn-primary::after {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 100%);
+  }
+  .btn-primary:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 14px 34px rgba(120,15,15,.55) }
+  .btn-primary:active:not(:disabled) { transform:translateY(0) }
+  .btn-primary:disabled { opacity:.5; cursor:not-allowed }
+  .btn-ghost {
+    width:100%; padding:13px;
+    background:transparent; color:var(--text2);
+    border:1px solid var(--border); border-radius:var(--r);
+    font-size:14px; font-weight:700; cursor:pointer;
+    transition:.3s; margin-top:10px;
+  }
+  .btn-ghost:hover { border-color:var(--red-m); color:var(--text) }
+
+  /* LOADING SPINNER inside button */
+  .btn-spinner {
+    display:none; width:18px; height:18px; border:2px solid rgba(255,255,255,.3);
+    border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite;
+    margin:0 auto;
+  }
+  @keyframes spin { to{ transform:rotate(360deg) } }
+  .btn-primary.loading .btn-txt { display:none }
+  .btn-primary.loading .btn-spinner { display:block }
+
+  /* ═══════════════════════════════════════════
+     SUCCESS PAGE
+  ═══════════════════════════════════════════ */
+  .success-page {
+    width:100%; max-width:500px;
+    text-align:center; padding:80px 20px;
+    display:flex; flex-direction:column; align-items:center; gap:0;
+  }
+  .success-ring {
+    width:110px; height:110px; border-radius:50%;
+    background:rgba(120,15,15,.12); border:2px solid var(--red-m);
+    display:flex; align-items:center; justify-content:center;
+    font-size:48px; margin-bottom:32px;
+    animation:ringPulse 2.5s infinite;
+  }
+  @keyframes ringPulse {
+    0%,100%{ box-shadow:0 0 0 0 rgba(160,25,25,.35) }
+    60%{ box-shadow:0 0 0 22px rgba(160,25,25,0) }
+  }
+  .success-page h2 { font-size:clamp(24px,4vw,32px); font-weight:900; margin-bottom:14px }
+  .success-page p { font-size:15px; color:var(--text2); line-height:1.8; margin-bottom:30px }
+  .ticket-card {
+    background:var(--s2); border:1px dashed var(--red-m);
+    border-radius:var(--r); padding:24px; width:100%;
+    font-family:'JetBrains Mono',monospace; margin-bottom:32px;
+  }
+  .ticket-card small { font-size:10px; color:var(--dim); letter-spacing:3px; display:block; margin-bottom:8px; text-transform:uppercase }
+  .ticket-card strong { font-size:28px; color:var(--red-l); letter-spacing:4px; display:block }
+  .ticket-type { font-size:12px; color:var(--text2); margin-top:6px }
+
+  /* ═══════════════════════════════════════════
+     WA FLOAT BUTTON
+  ═══════════════════════════════════════════ */
+  .wa-float {
+    position:fixed; bottom:28px; left:28px; z-index:300;
+    width:58px; height:58px; border-radius:50%;
+    background:var(--wa); display:flex; align-items:center; justify-content:center;
+    font-size:26px; box-shadow:0 6px 24px rgba(37,211,102,.5);
+    transition:.3s; animation:waFloat 4s ease-in-out infinite;
+  }
+  .wa-float:hover { transform:scale(1.12)!important; box-shadow:0 10px 32px rgba(37,211,102,.7) }
+  @keyframes waFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+  .wa-tip {
+    position:absolute; right:66px; white-space:nowrap;
+    background:#111; color:var(--text); font-family:'Cairo',sans-serif;
+    font-size:13px; font-weight:700; padding:8px 14px;
+    border:1px solid var(--border2); border-radius:8px;
+    opacity:0; pointer-events:none; transition:.25s;
+  }
+  .wa-float:hover .wa-tip { opacity:1 }
+
+  /* ═══════════════════════════════════════════
+     FOOTER
+  ═══════════════════════════════════════════ */
+  .site-footer {
+    position:relative; z-index:1;
+    width:100%; padding:44px 24px 28px;
+    border-top:1px solid var(--border);
+    display:grid; grid-template-columns:1fr auto 1fr;
+    align-items:center; gap:20px;
+  }
+  .footer-logo img { height:38px; opacity:.55 }
+  .footer-center { text-align:center }
+  .footer-links { display:flex; gap:20px; flex-wrap:wrap; justify-content:center }
+  .footer-links a { font-size:13px; color:var(--dim); cursor:pointer; transition:.2s }
+  .footer-links a:hover { color:var(--text) }
+  .footer-copy { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--dimmer); letter-spacing:1px; margin-top:10px }
+  .footer-right { text-align:left }
+  .footer-social { display:flex; gap:10px; justify-content:flex-start }
+  .social-btn {
+    width:36px; height:36px; border-radius:50%;
+    background:var(--s2); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; transition:.25s; cursor:pointer; text-decoration:none;
+  }
+  .social-btn:hover { border-color:var(--red-m); background:var(--glow-sm) }
+
+  /* ═══════════════════════════════════════════
+     TOAST NOTIFICATION
+  ═══════════════════════════════════════════ */
+  .toast {
+    position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(20px);
+    z-index:500; background:var(--s3); border:1px solid var(--border2);
+    border-radius:var(--r); padding:14px 24px;
+    font-size:14px; font-weight:700; color:var(--text);
+    box-shadow:0 10px 30px rgba(0,0,0,.7);
+    opacity:0; pointer-events:none; transition:.3s var(--ease);
+    max-width:340px; text-align:center;
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0) }
+  .toast.error { border-color:var(--red-v); color:var(--red-v) }
+  .toast.success { border-color:var(--green); color:var(--green) }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════════════ */
+  @media(max-width:640px){
+    .form-shell-head, .form-body { padding:22px 20px }
+    .site-footer { grid-template-columns:1fr; text-align:center }
+    .footer-social { justify-content:center }
+    .proc-step:not(:last-child)::after { display:none }
+    .stats-row { flex-direction:column }
+    .stat { border-left:none; border-bottom:1px solid var(--border2) }
+    .stat:last-child { border-bottom:none }
+  }
+  </style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="bg-orb"></div>
+
+<!-- ══════════════════════════════════════
+     STICKY NAV
+══════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <a class="nav-logo" href="#" onclick="goHome();return false">
+    <img src="logo.jpg" alt="B2-PC"/>
+  </a>
+  <div class="nav-right">
+    <button class="btn-back" id="back-btn" onclick="goHome()">← رجوع</button>
+    <a class="btn-wa-nav" href="https://api.whatsapp.com/send?phone=96895540635" target="_blank" rel="noopener">💬 واتساب</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     HOME PAGE
+══════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="tag-pill"><span class="dot"></span>مسقط · سلطنة عُمان · متاح الآن</div>
+    <h1 class="hero-title">
+      بناء وتطوير وصيانة
+      <span class="grad">PC Gaming</span>
+    </h1>
+    <p class="hero-sub">
+      من التخصيص الكامل إلى ترقية القطع وإصلاح الأعطال — فريق B2-PC يقدم لك تجربة احترافية حقيقية بضمان سنة كاملة وتركيب مجاني.
+    </p>
+
+    <div class="stats-row">
+      <div class="stat">
+        <span class="stat-n" data-to="12">0</span>
+        <div class="stat-l">شهر ضمان</div>
+      </div>
+      <div class="stat">
+        <span class="stat-n" data-to="24">0</span>
+        <div class="stat-l">ساعة استجابة</div>
+      </div>
+      <div class="stat">
+        <span class="stat-n">100%</span>
+        <div class="stat-l">رضا العملاء</div>
+      </div>
+      <div class="stat">
+        <span class="stat-n">مجاني</span>
+        <div class="stat-l">تركيب وكابلات</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICE CARDS -->
+  <div class="services-grid">
+    <div class="svc-card" onclick="goPage('page-order')">
+      <span class="svc-icon">⚙️</span>
+      <div class="svc-title">طلب PC مخصص</div>
+      <div class="svc-desc">نبني لك جهازاً بالمواصفات التي تناسب استخدامك وميزانيتك تماماً — قطعة بقطعة.</div>
+      <div class="svc-link">اطلب الآن ←</div>
+    </div>
+    <div class="svc-card" onclick="goPage('page-upgrade')">
+      <span class="svc-icon">🚀</span>
+      <div class="svc-title">تطوير البي سي</div>
+      <div class="svc-desc">ارفع أداء جهازك القائم بترقية المعالج أو كارت الشاشة أو الرامات وغيرها.</div>
+      <div class="svc-link">طوّر جهازك ←</div>
+    </div>
+    <div class="svc-card" onclick="goPage('page-repair')">
+      <span class="svc-icon">🔧</span>
+      <div class="svc-title">صيانة وإصلاح</div>
+      <div class="svc-desc">تشخيص دقيق وإصلاح جذري لأعطال الهاردوير والسوفتوير مع ضمان على العمل.</div>
+      <div class="svc-link">اطلب الصيانة ←</div>
+    </div>
+    <a class="svc-card svc-wa" href="https://api.whatsapp.com/send?phone=96895540635" target="_blank" rel="noopener">
+      <span class="svc-icon">💬</span>
+      <div class="svc-title" style="color:var(--wa)">استفسار مباشر</div>
+      <div class="svc-desc">سؤال خاص أو طلب غير معتاد؟ راسلنا على واتساب وسنرد في دقائق.</div>
+      <div class="svc-link">راسلنا الآن ←</div>
+    </a>
+  </div>
+
+  <!-- PROCESS -->
+  <section class="process-section">
+    <div class="section-head">
+      <h2>كيف تسير العملية؟</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="process-steps">
+      <div class="proc-step">
+        <div class="proc-num">1</div>
+        <h4>أرسل طلبك</h4>
+        <p>ملأ النموذج بالتفاصيل والمواصفات</p>
+      </div>
+      <div class="proc-step">
+        <div class="proc-num">2</div>
+        <h4>نتواصل معك</h4>
+        <p>يردّ عليك فريقنا خلال 24 ساعة</p>
+      </div>
+      <div class="proc-step">
+        <div class="proc-num">3</div>
+        <h4>نبني أو نصلح</h4>
+        <p>نجمّع الجهاز ونختبره بدقة</p>
+      </div>
+      <div class="proc-step">
+        <div class="proc-num">4</div>
+        <h4>التسليم</h4>
+        <p>توصيل أو استلام بالمعبيلة</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="why-section">
+    <div class="section-head">
+      <h2>لماذا B2-PC؟</h2>
+      <p>نلتزم بمعايير احترافية في كل خطوة من بناء جهازك</p>
+      <div class="divider"></div>
+    </div>
+    <div class="feats-grid">
+      <div class="feat"><span class="feat-ico">🛡️</span><h4>ضمان سنة كاملة</h4><p>ضمان حقيقي على القطع والتركيب والأداء.</p></div>
+      <div class="feat"><span class="feat-ico">🛠️</span><h4>تركيب مجاني</h4><p>تجميع احترافي وإدارة كابلات بلا رسوم إضافية.</p></div>
+      <div class="feat"><span class="feat-ico">⚡</span><h4>اختبار مكثف</h4><p>نختبر الجهاز بأقوى برامج الضغط قبل التسليم.</p></div>
+      <div class="feat"><span class="feat-ico">🖥️</span><h4>جاهز للتشغيل</h4><p>يصلك بنظام تشغيل مثبت ومحدث وجاهز تماماً.</p></div>
+      <div class="feat"><span class="feat-ico">💬</span><h4>دعم ما بعد البيع</h4><p>تواصل معنا في أي وقت لأي مشكلة بعد الاستلام.</p></div>
+      <div class="feat"><span class="feat-ico">🚚</span><h4>توصيل متاح</h4><p>نوصل لأغلب مناطق مسقط والمناطق المجاورة.</p></div>
+    </div>
+  </section>
+
+</div><!-- /page-home -->
+
+<!-- ══════════════════════════════════════
+     ORDER PAGE — PC مخصص
+══════════════════════════════════════ -->
+<div class="page" id="page-order">
+  <div class="form-page-wrap">
+    <div class="form-shell">
+      <div class="form-shell-head">
+        <h2>⚙️ طلب PC مخصص</h2>
+        <p>حدد مواصفاتك وسنبني لك الجهاز المثالي</p>
+      </div>
+      <div class="form-body">
+        <div class="prog-track">
+          <div class="prog-rail"><div class="prog-fill" id="op-fill" style="width:33%"></div></div>
+          <span class="prog-txt" id="op-txt">1 / 3</span>
+        </div>
+
+        <!-- STEP 1: SPECS -->
+        <div class="step active" id="o1">
+          <div class="step-title">مواصفات الجهاز المطلوب</div>
+          <div class="field">
+            <label>الاستخدام الأساسي</label>
+            <select id="o-use">
+              <option value="">اختر...</option>
+              <option>ألعاب (Gaming)</option>
+              <option>تصميم ومونتاج</option>
+              <option>برمجة وتطوير</option>
+              <option>دراسة وعمل عام</option>
+              <option>استخدام شامل</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>الميزانية التقريبية (ر.ع)</label>
+            <input type="number" id="o-budget" placeholder="مثال: 350" min="80" max="5000"/>
+            <div class="field-hint">الحد الأدنى 80 ر.ع</div>
+            <div class="field-err">الرجاء إدخال ميزانية صحيحة (80-5000 ر.ع)</div>
+          </div>
+          <div class="field">
+            <label>المعالج المفضل</label>
+            <select id="o-cpu">
+              <option>اختر لي الأفضل بحسب الميزانية</option>
+              <option>Intel Core (i5 / i7 / i9)</option>
+              <option>AMD Ryzen (5 / 7 / 9)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>كارت الشاشة</label>
+            <select id="o-gpu">
+              <option>اختر لي الأفضل بحسب الميزانية</option>
+              <option>NVIDIA RTX Series</option>
+              <option>AMD Radeon RX Series</option>
+              <option>بدون كارت خارجي (مدمج)</option>
+            </select>
+          </div>
+          <button class="btn-primary" onclick="oStep(2)"><span class="btn-txt">التالي →</span><div class="btn-spinner"></div></button>
+        </div>
+
+        <!-- STEP 2: EXTRAS -->
+        <div class="step" id="o2">
+          <div class="step-title">تفضيلات إضافية</div>
+          <div class="field">
+            <label>الرامات (RAM)</label>
+            <select id="o-ram">
+              <option>اختر لي الأنسب</option>
+              <option>8GB</option><option>16GB</option><option>32GB</option><option>64GB</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>التخزين</label>
+            <select id="o-storage">
+              <option>اختر لي الأنسب</option>
+              <option>256GB SSD</option><option>512GB SSD</option>
+              <option>1TB SSD</option><option>1TB SSD + 2TB HDD</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>نظام التشغيل</label>
+            <select id="o-os">
+              <option>Windows 11 Home</option>
+              <option>Windows 11 Pro</option>
+              <option>Linux</option>
+              <option>بدون نظام</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>ملاحظات خاصة (اختياري)</label>
+            <textarea id="o-notes" placeholder="لون الكيس، مبرد مائي، عدد الشاشات، أي تفضيل آخر..." maxlength="400"></textarea>
+            <div class="char-count" id="o-notes-cc">0 / 400</div>
+          </div>
+          <button class="btn-primary" onclick="oStep(3)"><span class="btn-txt">التالي →</span><div class="btn-spinner"></div></button>
+          <button class="btn-ghost" onclick="oStep(1)">← رجوع</button>
+        </div>
+
+        <!-- STEP 3: CONTACT -->
+        <div class="step" id="o3">
+          <div class="step-title">بيانات التواصل</div>
+          <div class="field" id="f-o-name">
+            <label>الاسم الكريم</label>
+            <input type="text" id="o-name" placeholder="محمد العماني..." maxlength="60" autocomplete="name"/>
+            <div class="field-err">الرجاء إدخال اسم صحيح (حرفان على الأقل)</div>
+          </div>
+          <div class="field" id="f-o-phone">
+            <label>رقم الواتساب</label>
+            <input type="tel" id="o-phone" placeholder="9xxxxxxx" maxlength="15" autocomplete="tel" inputmode="numeric"/>
+            <div class="field-hint">8 أرقام، يبدأ بـ 9 أو 7</div>
+            <div class="field-err">رقم الهاتف غير صحيح</div>
+          </div>
+          <button class="btn-primary" id="btn-o" onclick="submitOrder()">
+            <span class="btn-txt">✅ إرسال الطلب</span>
+            <div class="btn-spinner"></div>
+          </button>
+          <button class="btn-ghost" onclick="oStep(2)">← رجوع</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     UPGRADE PAGE
+══════════════════════════════════════ -->
+<div class="page" id="page-upgrade">
+  <div class="form-page-wrap">
+    <div class="form-shell">
+      <div class="form-shell-head">
+        <h2>🚀 تطوير البي سي</h2>
+        <p>ارفع أداء جهازك لأقصى حد</p>
+      </div>
+      <div class="form-body">
+        <div class="prog-track">
+          <div class="prog-rail"><div class="prog-fill" id="up-fill" style="width:33%"></div></div>
+          <span class="prog-txt" id="up-txt">1 / 3</span>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="step active" id="u1">
+          <div class="step-title">ما القطعة التي تريد تطويرها؟</div>
+          <div class="chips" id="u-parts">
+            <div class="chip" onclick="pickChip(this,'u-parts')"><span class="chip-ico">🧠</span>المعالج</div>
+            <div class="chip" onclick="pickChip(this,'u-parts')"><span class="chip-ico">🎮</span>كارت الشاشة</div>
+            <div class="chip" onclick="pickChip(this,'u-parts')"><span class="chip-ico">💾</span>الرامات</div>
+            <div class="chip" onclick="pickChip(this,'u-parts')"><span class="chip-ico">💿</span>التخزين SSD</div>
+            <div class="chip" onclick="pickChip(this,'u-parts')"><span class="chip-ico">❄️</span>نظام التبريد</div>
+            <div class="chip" onclick="pickChip(this,'u-parts')"><span class="chip-ico">🖥️</span>الكيس</div>
+            <div class="chip" onclick="pickChip(this,'u-parts')"><span class="chip-ico">⚡</span>مزود الطاقة</div>
+          </div>
+          <button class="btn-primary" onclick="uStep(2)"><span class="btn-txt">التالي →</span><div class="btn-spinner"></div></button>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step" id="u2">
+          <div class="step-title">تفاصيل الجهاز والهدف</div>
+          <div class="field">
+            <label>مواصفات جهازك الحالي</label>
+            <textarea id="u-current" placeholder="مثال: Intel i5-10400، رام 8 جيجا DDR4، GTX 1060 6GB..." maxlength="400"></textarea>
+            <div class="char-count" id="u-cur-cc">0 / 400</div>
+          </div>
+          <div class="field">
+            <label style="color:var(--red-l)">القطعة الجديدة المطلوبة</label>
+            <textarea id="u-target" placeholder="مثال: أريد RTX 4060 أو ما هو أفضل بميزانية 120 ر.ع..." maxlength="400"></textarea>
+            <div class="char-count" id="u-tar-cc">0 / 400</div>
+          </div>
+          <button class="btn-primary" onclick="uStep(3)"><span class="btn-txt">التالي →</span><div class="btn-spinner"></div></button>
+          <button class="btn-ghost" onclick="uStep(1)">← رجوع</button>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step" id="u3">
+          <div class="step-title">بيانات التواصل</div>
+          <div class="field" id="f-u-name">
+            <label>الاسم الكريم</label>
+            <input type="text" id="u-name" placeholder="محمد..." maxlength="60" autocomplete="name"/>
+            <div class="field-err">الرجاء إدخال اسم صحيح</div>
+          </div>
+          <div class="field" id="f-u-phone">
+            <label>رقم الواتساب</label>
+            <input type="tel" id="u-phone" placeholder="9xxxxxxx" maxlength="15" autocomplete="tel" inputmode="numeric"/>
+            <div class="field-err">رقم الهاتف غير صحيح</div>
+          </div>
+          <button class="btn-primary" id="btn-u" onclick="submitUpgrade()">
+            <span class="btn-txt">✅ إرسال طلب التطوير</span>
+            <div class="btn-spinner"></div>
+          </button>
+          <button class="btn-ghost" onclick="uStep(2)">← رجوع</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     REPAIR PAGE
+══════════════════════════════════════ -->
+<div class="page" id="page-repair">
+  <div class="form-page-wrap">
+    <div class="form-shell">
+      <div class="form-shell-head">
+        <h2>🔧 طلب صيانة وإصلاح</h2>
+        <p>صف مشكلتك وسيتواصل معك الفني قريباً</p>
+      </div>
+      <div class="form-body">
+        <div class="prog-track">
+          <div class="prog-rail"><div class="prog-fill" id="rp-fill" style="width:50%"></div></div>
+          <span class="prog-txt" id="rp-txt">1 / 2</span>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="step active" id="r1">
+          <div class="step-title">تفاصيل المشكلة</div>
+          <div class="field">
+            <label>نوع الصيانة</label>
+            <select id="r-type">
+              <option>صيانة هاردوير (قطع مادية)</option>
+              <option>صيانة سوفتوير (نظام وبرامج)</option>
+              <option>فحص شامل — لا أعرف المشكلة</option>
+              <option>تنظيف وتشحيم الجهاز</option>
+              <option>إعادة تثبيت Windows</option>
+            </select>
+          </div>
+          <div class="field" id="f-r-desc">
+            <label>وصف المشكلة بالتفصيل</label>
+            <textarea id="r-desc" placeholder="اشرح ما يحدث للجهاز — متى تبدأ المشكلة، أي رسائل خطأ..." maxlength="600"></textarea>
+            <div class="char-count" id="r-desc-cc">0 / 600</div>
+            <div class="field-err">الرجاء كتابة وصف للمشكلة (10 أحرف على الأقل)</div>
+          </div>
+          <button class="btn-primary" onclick="rStep(2)"><span class="btn-txt">التالي →</span><div class="btn-spinner"></div></button>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step" id="r2">
+          <div class="step-title">بيانات التواصل</div>
+          <div class="field" id="f-r-name">
+            <label>الاسم الكريم</label>
+            <input type="text" id="r-name" placeholder="محمد..." maxlength="60" autocomplete="name"/>
+            <div class="field-err">الرجاء إدخال اسم صحيح</div>
+          </div>
+          <div class="field" id="f-r-phone">
+            <label>رقم الواتساب</label>
+            <input type="tel" id="r-phone" placeholder="9xxxxxxx" maxlength="15" autocomplete="tel" inputmode="numeric"/>
+            <div class="field-err">رقم الهاتف غير صحيح</div>
+          </div>
+          <div class="field">
+            <label>المنطقة / المدينة (اختياري)</label>
+            <input type="text" id="r-city" placeholder="مسقط، صلالة..." maxlength="60" autocomplete="address-level2"/>
+          </div>
+          <button class="btn-primary" id="btn-r" onclick="submitRepair()">
+            <span class="btn-txt">✅ إرسال طلب الصيانة</span>
+            <div class="btn-spinner"></div>
+          </button>
+          <button class="btn-ghost" onclick="rStep(1)">← رجوع</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SUCCESS PAGE
+══════════════════════════════════════ -->
+<div class="page" id="page-success">
+  <div class="success-page">
+    <div class="success-ring">✅</div>
+    <h2>تم استلام طلبك!</h2>
+    <p>فريق <strong>B2-PC</strong> يراجع تفاصيل طلبك الآن.<br/>سنتواصل معك عبر الواتساب خلال 24 ساعة.</p>
+    <div class="ticket-card">
+      <small>رقم طلبك</small>
+      <strong id="tkt-num">#B2-00000</strong>
+      <div class="ticket-type" id="tkt-type"></div>
+    </div>
+    <button class="btn-primary" onclick="goHome()" style="max-width:280px">العودة للرئيسية</button>
+    <br/>
+    <a class="btn-wa-nav" href="https://api.whatsapp.com/send?phone=96895540635" target="_blank" rel="noopener"
+       style="margin:16px auto;max-width:280px;justify-content:center;border-radius:var(--r);padding:14px 20px;display:flex">
+       💬 تابع طلبك على واتساب
+    </a>
+  </div>
+</div>
+
+<!-- WA FLOAT -->
+<a class="wa-float" href="https://api.whatsapp.com/send?phone=96895540635" target="_blank" rel="noopener" aria-label="واتساب">
+  💬<span class="wa-tip">راسلنا الآن</span>
+</a>
+
+<!-- HONEYPOT (hidden from humans, bots fill it) -->
+<input id="_hp" name="_hp" tabindex="-1" aria-hidden="true" autocomplete="off"
+  style="position:absolute;left:-9999px;width:0;height:0;opacity:0;pointer-events:none"/>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-logo"><img src="logo.jpg" alt="B2-PC"/></div>
+  <div class="footer-center">
+    <div class="footer-links">
+      <a onclick="goHome()">الرئيسية</a>
+      <a onclick="goPage('page-order')">طلب PC</a>
+      <a onclick="goPage('page-upgrade')">تطوير</a>
+      <a onclick="goPage('page-repair')">صيانة</a>
+      <a href="https://api.whatsapp.com/send?phone=96895540635" target="_blank" rel="noopener">واتساب</a>
+    </div>
+    <div class="footer-copy">© 2025 B2-PC · مسقط، سلطنة عُمان · جميع الحقوق محفوظة</div>
+  </div>
+  <div class="footer-right">
+    <div class="footer-social">
+      <a class="social-btn" href="https://api.whatsapp.com/send?phone=96895540635" target="_blank" rel="noopener" title="واتساب">💬</a>
+      <a class="social-btn" href="https://www.instagram.com/b_2your_pc" target="_blank" rel="noopener" title="انستقرام">📸</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+<script>
+(function(){
+'use strict';
+
+// ── EmailJS init ──────────────────────────────────
+window.addEventListener('load', function(){
+  if(typeof emailjs !== 'undefined'){
+    emailjs.init({publicKey:'PpxlvPU8GNdGkmqt8'});
+  }
+});
+
+// ── SECURITY LAYER ────────────────────────────────
+const SEC = {
+  _log:[], _last:0,
+  RATE_MAX:3, RATE_WIN:600000, COOLDOWN:35000,
+
+  honeypot: ()=> document.getElementById('_hp').value !== '',
+
+  rateOk: function(){
+    const now=Date.now();
+    this._log = this._log.filter(t => now-t < this.RATE_WIN);
+    if(this._log.length >= this.RATE_MAX) return false;
+    this._log.push(now); return true;
+  },
+
+  coolOk: function(){
+    const now=Date.now();
+    if(now - this._last < this.COOLDOWN) return false;
+    this._last=now; return true;
+  },
+
+  check: function(){
+    if(this.honeypot()){ console.warn('[SEC] bot trap'); return false; }
+    if(!this.coolOk()){ toast('انتظر قليلاً قبل الإرسال مجدداً.','error'); return false; }
+    if(!this.rateOk()){ toast('تجاوزت الحد المسموح. حاول بعد 10 دقائق.','error'); return false; }
+    return true;
+  },
+
+  sanitize: function(s, max=500){
+    if(!s) return '';
+    return String(s)
+      .replace(/<[^>]*>/g,'')
+      .replace(/[<>"'`;]/g,'')
+      .replace(/javascript:/gi,'')
+      .replace(/on\w+\s*=/gi,'')
+      .trim()
+      .slice(0, max);
+  },
+
+  validPhone: (p)=> /^(9|7)\d{7}$/.test(String(p).replace(/\s/g,'')),
+  validName:  (n)=> /^[\u0600-\u06FFa-zA-Z\s]{2,60}$/.test(String(n).trim()),
+  validBudget:(b)=> b >= 80 && b <= 5000,
+};
+
+// ── STATE ─────────────────────────────────────────
+const S = { upgradePart:'' };
+const EJS = { svc:'service_y8ok5l6', tpl:'template_rzkm515' };
+
+// ── TOAST ─────────────────────────────────────────
+let toastTimer;
+function toast(msg, type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.className='toast show'+(type?' '+type:'');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),3500);
+}
+
+// ── NAV ───────────────────────────────────────────
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const back=document.getElementById('back-btn');
+  (id==='page-home'||id==='page-success')
+    ? back.classList.remove('visible')
+    : back.classList.add('visible');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goHome(){
+  resetForms();
+  showPage('page-home');
+}
+function goPage(id){ showPage(id) }
+window.goHome=goHome; window.goPage=goPage;
+
+// ── NAVBAR SCROLL ─────────────────────────────────
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('elevated', window.scrollY>10);
+},{passive:true});
+
+// ── COUNTERS ─────────────────────────────────────
+function runCounters(){
+  document.querySelectorAll('.stat-n[data-to]').forEach(el=>{
+    const target=+el.dataset.to; let cur=0;
+    const tick=setInterval(()=>{
+      cur=Math.min(cur+1,target);
+      el.textContent=cur+'h';
+      if(cur>=target) clearInterval(tick);
+    },40);
+  });
+}
+window.addEventListener('load',()=>setTimeout(runCounters,600));
+
+// ── CHAR COUNTERS ─────────────────────────────────
+function bindCC(inputId, counterId, max){
+  const el=document.getElementById(inputId);
+  const cc=document.getElementById(counterId);
+  if(!el||!cc) return;
+  el.addEventListener('input',()=>{
+    const l=el.value.length;
+    cc.textContent=l+' / '+max;
+    cc.classList.toggle('warn', l > max*0.85);
+  });
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  bindCC('o-notes','o-notes-cc',400);
+  bindCC('u-current','u-cur-cc',400);
+  bindCC('u-target','u-tar-cc',400);
+  bindCC('r-desc','r-desc-cc',600);
+});
+
+// ── PROGRESS HELPER ───────────────────────────────
+function setProgress(fillId, txtId, step, total){
+  document.getElementById(fillId).style.width=Math.round(step/total*100)+'%';
+  document.getElementById(txtId).textContent=step+' / '+total;
+}
+function showStep(prefix, n, total, fillId, txtId){
+  document.querySelectorAll(`[id^="${prefix}"]`).forEach(s=>s.classList.remove('active'));
+  document.getElementById(prefix+n).classList.add('active');
+  setProgress(fillId, txtId, n, total);
+}
+
+// ── FIELD VALIDATION HELPERS ──────────────────────
+function setFieldState(fieldId, valid){
+  const f=document.getElementById(fieldId);
+  if(!f) return;
+  f.classList.toggle('valid', valid);
+  f.classList.toggle('invalid', !valid);
+}
+function clearField(fieldId){
+  const f=document.getElementById(fieldId);
+  if(f){ f.classList.remove('valid','invalid') }
+}
+
+// ── CHIP SELECT ───────────────────────────────────
+function pickChip(el, group){
+  document.querySelectorAll('#'+group+' .chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  S.upgradePart = el.textContent.trim();
+}
+window.pickChip=pickChip;
+
+// ── ORDER STEPS ───────────────────────────────────
+function oStep(n){
+  if(n===2){
+    const budget=+document.getElementById('o-budget').value;
+    const use=document.getElementById('o-use').value;
+    if(!use){ toast('الرجاء اختيار الاستخدام.','error'); return; }
+    if(!SEC.validBudget(budget)){ setFieldState('f-o-budget',false); toast('الرجاء إدخال ميزانية صحيحة (80-5000 ر.ع).','error'); return; }
+  }
+  showStep('o',n,3,'op-fill','op-txt');
+}
+window.oStep=oStep;
+
+// ── UPGRADE STEPS ─────────────────────────────────
+function uStep(n){
+  if(n===2 && !S.upgradePart){ toast('الرجاء تحديد القطعة المطلوبة.','error'); return; }
+  if(n===3 && !document.getElementById('u-target').value.trim()){ toast('الرجاء كتابة القطعة المطلوبة.','error'); return; }
+  showStep('u',n,3,'up-fill','up-txt');
+}
+window.uStep=uStep;
+
+// ── REPAIR STEPS ──────────────────────────────────
+function rStep(n){
+  if(n===2){
+    const desc=document.getElementById('r-desc').value.trim();
+    if(desc.length<10){ setFieldState('f-r-desc',false); toast('الرجاء كتابة وصف للمشكلة.','error'); return; }
+    setFieldState('f-r-desc',true);
+  }
+  showStep('r',n,2,'rp-fill','rp-txt');
+}
+window.rStep=rStep;
+
+// ── SUBMIT HELPERS ────────────────────────────────
+function btnLoad(id, loading){
+  const b=document.getElementById(id);
+  if(!b) return;
+  b.disabled=loading;
+  b.classList.toggle('loading',loading);
+}
+
+function validateContact(nameId, phoneId, fNameId, fPhoneId){
+  const name=SEC.sanitize(document.getElementById(nameId).value);
+  const phone=SEC.sanitize(document.getElementById(phoneId).value, 20);
+  let ok=true;
+  if(!SEC.validName(name)){ setFieldState(fNameId,false); ok=false; }
+  else setFieldState(fNameId,true);
+  if(!SEC.validPhone(phone)){ setFieldState(fPhoneId,false); ok=false; }
+  else setFieldState(fPhoneId,true);
+  return ok ? {name,phone} : null;
+}
+
+function buildMsg(lines){ return lines.join('\n'); }
+
+async function sendMail(order_type, from_name, phone, message, ticket){
+  return emailjs.send(EJS.svc, EJS.tpl, {
+    to_email:'beston2gaming@gmail.com',
+    ticket, order_type, from_name, phone, message
+  });
+}
+
+function genTicket(prefix){
+  return prefix+'-'+Date.now().toString(36).toUpperCase().slice(-4)+Math.floor(1000+Math.random()*9000);
+}
+
+function showSuccess(ticket, type){
+  document.getElementById('tkt-num').textContent = ticket;
+  document.getElementById('tkt-type').textContent = type;
+  showPage('page-success');
+  document.querySelectorAll('.btn-primary').forEach(b=>{ b.disabled=false; b.classList.remove('loading') });
+}
+
+// ── RESET ─────────────────────────────────────────
+function resetForms(){
+  document.querySelectorAll('input,textarea,select').forEach(el=>{
+    if(el.tagName==='SELECT') el.selectedIndex=0;
+    else el.value='';
+  });
+  document.querySelectorAll('.field').forEach(f=>f.classList.remove('valid','invalid'));
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  document.querySelectorAll('.char-count').forEach(cc=>{ cc.textContent=cc.textContent.replace(/^\d+/,'0') });
+  showStep('o',1,3,'op-fill','op-txt');
+  showStep('u',1,3,'up-fill','up-txt');
+  showStep('r',1,2,'rp-fill','rp-txt');
+  S.upgradePart='';
+}
+
+// ── SUBMIT ORDER ──────────────────────────────────
+async function submitOrder(){
+  if(!SEC.check()) return;
+  const ct=validateContact('o-name','o-phone','f-o-name','f-o-phone');
+  if(!ct){ toast('الرجاء التحقق من بيانات التواصل.','error'); return; }
+  btnLoad('btn-o',true);
+  const ticket=genTicket('ORD');
+  const msg=buildMsg([
+    '━━━━━━━━━━━━━━━━━━━━━━',
+    '🎫 '+ticket,
+    '📋 طلب PC مخصص',
+    '━━━━━━━━━━━━━━━━━━━━━━',
+    '👤 '+ct.name,
+    '📞 '+ct.phone,
+    '━━━━━━━━━━━━━━━━━━━━━━',
+    '🎯 الاستخدام: '+SEC.sanitize(document.getElementById('o-use').value),
+    '💰 الميزانية: '+document.getElementById('o-budget').value+' ر.ع',
+    '🔵 المعالج: '+SEC.sanitize(document.getElementById('o-cpu').value),
+    '🟢 كارت الشاشة: '+SEC.sanitize(document.getElementById('o-gpu').value),
+    '🧠 الرامات: '+SEC.sanitize(document.getElementById('o-ram').value),
+    '💾 التخزين: '+SEC.sanitize(document.getElementById('o-storage').value),
+    '🖥️ نظام التشغيل: '+SEC.sanitize(document.getElementById('o-os').value),
+    '📝 ملاحظات: '+(SEC.sanitize(document.getElementById('o-notes').value)||'لا يوجد'),
+    '━━━━━━━━━━━━━━━━━━━━━━',
+  ]);
+  try{
+    await sendMail('⚙️ طلب PC مخصص', ct.name, ct.phone, msg, ticket);
+    showSuccess(ticket,'⚙️ طلب PC مخصص');
+  }catch(e){
+    toast('خطأ في الإرسال. حاول مجدداً.','error');
+    btnLoad('btn-o',false);
+  }
+}
+window.submitOrder=submitOrder;
+
+// ── SUBMIT UPGRADE ────────────────────────────────
+async function submitUpgrade(){
+  if(!SEC.check()) return;
+  const ct=validateContact('u-name','u-phone','f-u-name','f-u-phone');
+  if(!ct){ toast('الرجاء التحقق من بيانات التواصل.','error'); return; }
+  btnLoad('btn-u',true);
+  const ticket=genTicket('UPG');
+  const msg=buildMsg([
+    '━━━━━━━━━━━━━━━━━━━━━━',
+    '🎫 '+ticket,
+    '📋 طلب تطوير',
+    '━━━━━━━━━━━━━━━━━━━━━━',
+    '👤 '+ct.name,
+    '📞 '+ct.phone,
+    '━━━━━━━━━━━━━━━━━━━━━━',
+    '🔧 القطعة: '+S.upgradePart,
+    '💻 الجهاز الحالي: '+SEC.sanitize(document.getElementById('u-current').value),
+    '🎯 الهدف: '+SEC.sanitize(document.getElementById('u-target').value),
+    '━━━━━━━━━━━━━━━━━━━━━━',
+  ]);
+  try{
+    await sendMail('🚀 تطوير بي سي', ct.name, ct.phone, msg, ticket);
+    showSuccess(ticket,'🚀 تطوير بي سي');
+  }catch(e){
+    toast('خطأ في الإرسال. حاول مجدداً.','error');
+    btnLoad('btn-u',false);
+  }
+}
+window.submitUpgrade=submitUpgrade;
+
+// ── SUBMIT REPAIR ─────────────────────────────────
+async function submitRepair(){
+  if(!SEC.check()) return;
+  const ct=validateContact('r-name','r-phone','f-r-name','f-r-phone');
+  if(!ct){ toast('الرجاء التحقق من بيانات التواصل.','error'); return; }
+  btnLoad('btn-r',true);
+  const ticket=genTicket('REP');
+  const msg=buildMsg([
+    '━━━━━━━━━━━━━━━━━━━━━━',
+    '🎫 '+ticket,
+    '📋 طلب صيانة',
+    '━━━━━━━━━━━━━━━━━━━━━━',
+    '👤 '+ct.name,
+    '📞 '+ct.phone,
+    '📍 '+(SEC.sanitize(document.getElementById('r-city').value)||'غير محدد'),
+    '━━━━━━━━━━━━━━━━━━━━━━',
+    '🔴 النوع: '+SEC.sanitize(document.getElementById('r-type').value),
+    '📝 الوصف: '+SEC.sanitize(document.getElementById('r-desc').value,600),
+    '━━━━━━━━━━━━━━━━━━━━━━',
+  ]);
+  try{
+    await sendMail('🔧 صيانة وإصلاح', ct.name, ct.phone, msg, ticket);
+    showSuccess(ticket,'🔧 صيانة وإصلاح');
+  }catch(e){
+    toast('خطأ في الإرسال. حاول مجدداً.','error');
+    btnLoad('btn-r',false);
+  }
+}
+window.submitRepair=submitRepair;
+
+})();
+</script>
+</body>
+</html>
